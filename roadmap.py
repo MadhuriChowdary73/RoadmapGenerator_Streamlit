@@ -1,9 +1,5 @@
-
-
 import streamlit as st
 import pandas as pd
-from datetime import datetime
-
 
 st.set_page_config(
     page_title="AI Career Roadmap Generator",
@@ -13,6 +9,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+
 .main {
     background-color: #0f172a;
     color: white;
@@ -42,12 +39,16 @@ st.markdown("""
     border-radius: 12px;
     margin-top: 10px;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
 st.title("🚀 AI Career Roadmap Generator")
-st.write("Generate a personalized roadmap based on your goal, skill level, and available time.")
 
+st.write(
+    "Generate a personalized roadmap based on your goal, "
+    "current level, and available study time."
+)
 
 name = st.text_input("Enter Your Name")
 
@@ -65,7 +66,11 @@ goal = st.selectbox(
 
 level = st.selectbox(
     "Current Skill Level",
-    ["Beginner", "Intermediate", "Advanced"]
+    [
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+    ]
 )
 
 time_available = st.slider(
@@ -82,10 +87,10 @@ duration = st.slider(
     6
 )
 
-
 roadmaps = {
 
     "DSA": {
+
         "Beginner": [
             "Learn Programming Basics",
             "Arrays and Strings",
@@ -100,7 +105,7 @@ roadmaps = {
         "Intermediate": [
             "Advanced Trees",
             "Graphs",
-            "DP",
+            "Dynamic Programming",
             "Greedy Algorithms",
             "Segment Trees",
             "Competitive Coding",
@@ -117,6 +122,7 @@ roadmaps = {
     },
 
     "Web Development": {
+
         "Beginner": [
             "HTML",
             "CSS",
@@ -146,6 +152,7 @@ roadmaps = {
     },
 
     "Machine Learning": {
+
         "Beginner": [
             "Python",
             "NumPy",
@@ -170,30 +177,104 @@ roadmaps = {
             "Computer Vision",
             "MLOps"
         ]
+    },
+
+    "App Development": {
+
+        "Beginner": [
+            "Programming Basics",
+            "Flutter Basics",
+            "Widgets",
+            "Layouts",
+            "Navigation",
+            "Mini Apps"
+        ],
+
+        "Intermediate": [
+            "Firebase",
+            "APIs",
+            "State Management",
+            "Authentication",
+            "Projects"
+        ],
+
+        "Advanced": [
+            "Animations",
+            "Clean Architecture",
+            "Play Store Deployment",
+            "Scalable Apps"
+        ]
+    },
+
+    "Cyber Security": {
+
+        "Beginner": [
+            "Networking Basics",
+            "Linux Basics",
+            "Cyber Security Fundamentals",
+            "Web Security"
+        ],
+
+        "Intermediate": [
+            "Ethical Hacking",
+            "Burp Suite",
+            "OWASP",
+            "CTF Practice"
+        ],
+
+        "Advanced": [
+            "Penetration Testing",
+            "Advanced Exploitation",
+            "Security Auditing"
+        ]
+    },
+
+    "Data Science": {
+
+        "Beginner": [
+            "Python",
+            "Pandas",
+            "NumPy",
+            "Data Cleaning",
+            "Visualization"
+        ],
+
+        "Intermediate": [
+            "SQL",
+            "Statistics",
+            "Machine Learning",
+            "Projects"
+        ],
+
+        "Advanced": [
+            "Deep Learning",
+            "Big Data",
+            "Deployment",
+            "Advanced Analytics"
+        ]
     }
 }
-
 
 resources = {
 
     "DSA": {
         "YouTube": [
-            "Striver DSA Sheet",
-            "Apna College DSA",
+            "Striver",
+            "Apna College",
             "Kunal Kushwaha"
         ],
         "Platforms": [
             "LeetCode",
-            "CodeStudio",
-            "GeeksforGeeks"
+            "GeeksforGeeks",
+            "CodeStudio"
         ]
     },
 
     "Web Development": {
         "YouTube": [
             "CodeWithHarry",
-            "SuperSimpleDev",
-            "JavaScript Mastery"
+            "JavaScript Mastery",
+            "SuperSimpleDev"
         ],
         "Platforms": [
             "Frontend Mentor",
@@ -213,9 +294,47 @@ resources = {
             "Coursera",
             "Google Colab"
         ]
+    },
+
+    "App Development": {
+        "YouTube": [
+            "Flutter",
+            "Codepur",
+            "Programming with Mosh"
+        ],
+        "Platforms": [
+            "Firebase",
+            "GitHub",
+            "Play Console"
+        ]
+    },
+
+    "Cyber Security": {
+        "YouTube": [
+            "NetworkChuck",
+            "John Hammond",
+            "David Bombal"
+        ],
+        "Platforms": [
+            "TryHackMe",
+            "Hack The Box",
+            "OverTheWire"
+        ]
+    },
+
+    "Data Science": {
+        "YouTube": [
+            "Krish Naik",
+            "CampusX",
+            "Data School"
+        ],
+        "Platforms": [
+            "Kaggle",
+            "Coursera",
+            "Google Colab"
+        ]
     }
 }
-
 
 if st.button("Generate Roadmap"):
 
@@ -225,64 +344,112 @@ if st.button("Generate Roadmap"):
 
     if roadmap_steps:
 
+        if time_available <= 2:
+            study_type = "Slow Pace"
+
+        elif time_available <= 5:
+            study_type = "Balanced Pace"
+
+        else:
+            study_type = "Fast Pace"
+
+        st.info(f"📚 Study Mode: {study_type}")
+
         st.header("📌 Your Personalized Roadmap")
 
         for i, step in enumerate(roadmap_steps, start=1):
 
             st.markdown(f"""
             <div class="goal-card">
-            <h3>Step {i}: {step}</h3>
-            <p>Recommended study time: {time_available} hrs/day</p>
+                <h3>Step {i}: {step}</h3>
+                <p>Recommended Study Time:
+                {time_available} hrs/day</p>
             </div>
             """, unsafe_allow_html=True)
 
-        # ---------------- TIMELINE TABLE ----------------
-        st.header("📅 Monthly Timeline")
+        st.header("📅 Personalized Monthly Timeline")
 
-        months = []
-        tasks = []
+        total_steps = len(roadmap_steps)
 
-        for idx, task in enumerate(roadmap_steps):
-            months.append(f"Month {idx+1}")
-            tasks.append(task)
+        roadmap_plan = []
 
-        df = pd.DataFrame({
-            "Month": months,
-            "Focus Area": tasks
-        })
+        for month in range(duration):
+
+            start_index = int(month * total_steps / duration)
+
+            end_index = int((month + 1) * total_steps / duration)
+
+            month_topics = roadmap_steps[start_index:end_index]
+
+            if month_topics:
+
+                roadmap_plan.append({
+                    "Month": f"Month {month + 1}",
+                    "Focus Areas": ", ".join(month_topics)
+                })
+
+        df = pd.DataFrame(roadmap_plan)
 
         st.table(df)
+
+        st.header("📈 Roadmap Completion Preview")
+
+        progress_value = min(int((time_available / 12) * 100), 100)
+
+        st.progress(progress_value)
+
+        st.write(
+            f"Estimated consistency level based on your "
+            f"study time: {progress_value}%"
+        )
 
         st.header("🎥 Recommended Resources")
 
         yt_resources = resources.get(goal, {}).get("YouTube", [])
+
         platforms = resources.get(goal, {}).get("Platforms", [])
 
         st.subheader("📺 YouTube Channels")
 
         for yt in yt_resources:
+
             st.markdown(f"""
             <div class="resource-box">
-            ✅ {yt}
+                ✅ {yt}
             </div>
             """, unsafe_allow_html=True)
 
         st.subheader("💻 Practice Platforms")
 
         for p in platforms:
+
             st.markdown(f"""
             <div class="resource-box">
-            🚀 {p}
+                🚀 {p}
             </div>
             """, unsafe_allow_html=True)
 
-        
+        st.header("⏰ Suggested Daily Routine")
+
+        coding_time = round(time_available * 0.5, 1)
+
+        learning_time = round(time_available * 0.3, 1)
+
+        revision_time = round(time_available * 0.2, 1)
+
+        st.write(f"📖 Learning Concepts → {learning_time} hrs")
+
+        st.write(f"💻 Practice/Coding → {coding_time} hrs")
+
+        st.write(f"🔁 Revision → {revision_time} hrs")
+
         st.header("🔥 Motivation")
 
-        st.info(
+        st.success(
             f"""
-            If you consistently study {time_available} hours daily
-            for {duration} months, you can become strong in {goal}.
+            {name}, if you consistently study
+            {time_available} hours daily for
+            {duration} months, you can become highly skilled in {goal}.
             """
         )
 
